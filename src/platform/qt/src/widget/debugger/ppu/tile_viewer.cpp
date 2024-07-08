@@ -155,9 +155,15 @@ bool TileViewer::eventFilter(QObject* object, QEvent* event) {
       const QMouseEvent* mouse_event = (QMouseEvent*)event;
 
       if(mouse_event->button() == Qt::LeftButton) {
+        const auto cursor_position =
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+          mouse_event->pos();
+#else
+          mouse_event->position().toPoint();
+#endif
         const int m_canvas_tile_size = 8 * m_spin_magnification->value();
-        const int tile_x = (int)(mouse_event->x() / m_canvas_tile_size);
-        const int tile_y = (int)(mouse_event->y() / m_canvas_tile_size);
+        const int tile_x = cursor_position.x() / m_canvas_tile_size;
+        const int tile_y = cursor_position.y() / m_canvas_tile_size;
 
         DrawTileDetail(tile_x, tile_y);
       } else {

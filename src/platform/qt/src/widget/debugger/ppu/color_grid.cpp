@@ -77,8 +77,14 @@ void ColorGrid::paintEvent(QPaintEvent* event) {
 }
 
 void ColorGrid::mousePressEvent(QMouseEvent* event) {
-  const int x = std::min((int)(event->x() / k_box_size), m_columns);
-  const int y = std::min((int)(event->y() / k_box_size), m_rows);
+  const auto cursor_position =
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    event->pos();
+#else
+    event->position().toPoint();
+#endif
+  const int x = std::min(cursor_position.x() / k_box_size, m_columns);
+  const int y = std::min(cursor_position.y() / k_box_size, m_rows);
 
   emit selected(x, y);
 }
