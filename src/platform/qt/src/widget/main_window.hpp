@@ -34,7 +34,7 @@
 struct MainWindow : QMainWindow {
   MainWindow(
     QApplication* app,
-    QWidget* parent = 0
+    QWidget* parent = nullptr
   );
 
  ~MainWindow();
