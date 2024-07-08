@@ -260,8 +260,14 @@ bool BackgroundViewer::eventFilter(QObject* object, QEvent* event) {
       const QMouseEvent* mouse_event = (QMouseEvent*)event;
 
       if(mouse_event->button() == Qt::LeftButton) {
-        const int tile_x = (int)(mouse_event->x() / 8);
-        const int tile_y = (int)(mouse_event->y() / 8);
+        const auto cursor_position =
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+          mouse_event->pos();
+#else
+          mouse_event->position().toPoint();
+#endif
+        const int tile_x = cursor_position.x() / 8;
+        const int tile_y = cursor_position.y() / 8;
 
         DrawTileDetail(tile_x, tile_y);
       } else {
