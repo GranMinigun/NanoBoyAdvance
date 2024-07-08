@@ -15,7 +15,14 @@
 #include "widget/main_window.hpp"
 
 #if defined(WIN32)
-  #include <QtPlatformHeaders/QWindowsWindowFunctions>
+  #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    #include <QtPlatformHeaders/QWindowsWindowFunctions>
+  #else
+    #ifndef WIN32_LEAN_AND_MEAN
+      #define WIN32_LEAN_AND_MEAN
+    #endif
+    #include <windows.h>
+  #endif
 #endif
 
 namespace fs = std::filesystem;
@@ -27,7 +34,7 @@ struct MenuStyle : QProxyStyle {
     const QStyleOption *opt,
     const QWidget *widget,
     QStyleHintReturn *returnData
-  ) const {
+  ) const override {
     if(stylehint == QStyle::SH_MenuBar_AltKeyNavigation)
       return 0;
 
@@ -97,7 +104,7 @@ int main(int argc, char** argv) {
 
   app.setStyle(new MenuStyle());
 
-#if defined(WIN32)
+#if defined(WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
   // See: https://doc.qt.io/qt-5/windows-issues.html#fullscreen-opengl-based-windows
   QWindowsWindowFunctions::setHasBorderInFullScreenDefault(true);
 #endif

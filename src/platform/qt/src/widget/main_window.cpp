@@ -38,6 +38,13 @@ MainWindow::MainWindow(
       .arg(VERSION_MAJOR).arg(VERSION_MINOR).arg(VERSION_PATCH).arg(VERSION_GIT_BRANCH).arg(VERSION_GIT_HASH);
   #endif
 
+  #if defined(WIN32) && (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+  // See: https://doc.qt.io/qt-6/windows-issues.html#fullscreen-opengl-based-windows
+  // and https://bugreports.qt.io/browse/QTBUG-104511#comment-712404
+  setAttribute(Qt::WA_NativeWindow);
+  windowHandle()->setProperty("_q_has_border_in_fullscreen", true);
+  #endif
+
   setWindowTitle(base_window_title);
   setAcceptDrops(true);
 
